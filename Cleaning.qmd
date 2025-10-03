@@ -2,16 +2,53 @@
 title: "Data Cleaning"
 format: html
 editor: visual
+jupyter: python3
 ---
 
 ## Import 
 
 ```{r}
-print(5 + 10)
+library(tidyverse)
 ```
 
 ```{python}
-print(5 + 10)
+import numpy as np
+import pandas as pd
+data = pd.read_csv("client_a_booze_r_us.csv")
+data['date'] = pd.to_datetime(data['date'], errors='coerce')
+data['date'] = data['date'].dt.strftime('%Y-%m')
+grouped_data = data.groupby(['name', 'date']).agg(
+    sum_sale_dollars = ('sale_dollars', 'sum'),
+    avg_sale_dollars = ('sale_dollars', 'mean'),
+    bottles_sold = ('sale_bottles', 'sum'),
+    num_transactions = ('name', 'count'),
+    num_stores = ('store', 'nunique')
+)
+print(grouped_data)
+```
+
+```{python}
+import numpy as np
+import pandas as pd
+data = pd.read_csv("client_b_dead.csv")
+pop_data = pd.read_csv('City_Population_in_Iowa_by_County_and_Year.csv')
+
+data['county'] = data['county'].astype(str).str.strip().str.lower()
+pop_data['County'] = pop_data['County'].astype(str).str.strip().str.lower()
+
+
+data['date'] = pd.to_datetime(data['date'], errors='coerce')
+data['date'] = data['date'].dt.strftime('%Y')
+pop_data['date'] = pd.to_datetime(pop_data['Year'], errors='coerce')
+pop_data['date'] = pop_data['date'].dt.strftime('%Y')
+
+
+combined_data =  pd.merge(data, pop_data, left_on = (['county', 'date']), right_on= (['County', 'date']))
+grouped_data = combined_data.groupby(['county', 'date','category_name']).agg(
+    sum_sale_dollars = ('sale_dollars', 'sum'),
+    avg_sale_dollars = ('sale_dollars', 'mean'),
+)
+print(grouped_data)
 ```
 
 
