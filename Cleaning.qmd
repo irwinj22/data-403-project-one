@@ -11,6 +11,66 @@ jupyter: python3
 library(tidyverse)
 ```
 
+# Pulling in population
+```{r}
+population <- read.csv(here::here("City_Population_in_Iowa_by_County_and_Year.csv"))
+```
+```{r}
+population2 <- population |>
+  select(County, City, Year, Estimate) |>
+  mutate(DATE = as.Date(Year, format="%B %d %Y"),
+         Year = year(DATE)) |>
+  group_by(County, Year) |>
+  summarize(Population = sum(Estimate)) |>
+  filter(Year >= 2020)
+```
+```{r}
+write.csv(population2, here::here("Population_in_Iowa_Transformed.csv"))
+```
+
+# Feature Engeenering for Client A
+
+```{r}
+client_a <- read.csv(here::here("client_a_booze_r_us.csv"))
+```
+```{r}
+client_a2  <- client_a |>
+  mutate(
+    company = sub(" [0-9]+",
+                  "",
+                  sub("#.*",
+                      "" ,
+                      sub("/.*", "",name))),
+    company = trimws(company, which="right")
+  )
+```
+
+# Feature Engeenering for Client B
+
+```{r}
+client_b <- read.csv(here::here("client_b_dead.csv"))
+```
+```{r}
+client_b2 <- client_b |>
+  mutate(
+    alcohol_type = case_when(
+      str_detect(category_name, "WHISK") ~ "WHISKEY",
+      str_detect(category_name, "VODKA") ~ "VODKA",
+      str_detect(category_name, "RUM") ~ "RUM",
+      str_detect(category_name, "TEQUILA") ~ "TEQUILA",
+      str_detect(category_name, "SCHNAPPS") ~ "SCHNAPPS",
+      str_detect(category_name, "GIN") ~ "GIN",
+      str_detect(category_name, "BRANDIES") ~ "BRANDY",
+      str_detect(category_name, "LIQUEURS") ~ "LIQUEUR",
+      str_detect(category_name, "COCKTAIL") ~ "COCKTAILS",
+      str_detect(category_name, "SCOTCH") ~ "SCOTCH",
+      TRUE ~ NA
+    )
+  )
+```
+
+
+
 ```{python}
 import numpy as np
 import pandas as pd
