@@ -44,8 +44,7 @@ client_a2  <- client_a |>
                       sub("/.*", "",name))),
     company = trimws(company, which="right")
   )
-
-write.csv(client_a2, here::here("client_a_booze_r_us_transformed.csv"))
+write.csv(client_a2, here::here("client_a_booze_r_us_transformed_.csv"))
 ```
 
 # Feature Engeenering for Client B
@@ -71,7 +70,7 @@ client_b2 <- client_b |>
     )
   )
 
-write.csv(client_b2, here::here("client_b_dead_transformed.csv"))
+write.csv(client_b2, here::here("client_b_dead_transformed_.csv"))
 
 ```
 
@@ -83,28 +82,29 @@ import matplotlib.pyplot as plt
 data = pd.read_csv("client_a_booze_r_us_transformed.csv")
 data['date'] = pd.to_datetime(data['date'], errors='coerce')
 data['date'] = data['date'].dt.strftime('%Y-%m')
-grouped_data = data.groupby(['name', 'date']).agg(
+grouped_data_booze = data.groupby(['company', 'date']).agg(
     sum_sale_dollars = ('sale_dollars', 'sum'),
     avg_sale_dollars = ('sale_dollars', 'mean'),
     bottles_sold = ('sale_bottles', 'sum'),
     num_transactions = ('name', 'count'),
     num_stores = ('store', 'nunique')
 )
-print(grouped_data)
+print(grouped_data_booze)
+
+grouped_data_booze.to_csv("grouped_data_booze.csv", index=True)
 
 # Plot Number of Stores vs Total Sales
-slope, intercept = np.polyfit(grouped_data['num_stores'], grouped_data['sum_sale_dollars'], 1)
-line_of_best_fit = slope * grouped_data['num_stores'] + intercept
+slope, intercept = np.polyfit(grouped_data_booze['num_stores'], grouped_data_booze['sum_sale_dollars'], 1)
+line_of_best_fit = slope * grouped_data_booze['num_stores'] + intercept
 
-plt.scatter(grouped_data['num_stores'], grouped_data['sum_sale_dollars'])
-plt.plot(grouped_data['num_stores'], line_of_best_fit, color='red', label='Line of Best Fit')
+plt.scatter(grouped_data_booze['num_stores'], grouped_data_booze['sum_sale_dollars'])
+plt.plot(grouped_data_booze['num_stores'], line_of_best_fit, color='red', label='Line of Best Fit')
 plt.ylabel("Total Sale Dollars (100,000 $ Scale)")
 plt.xlabel("Number of Stores")
 plt.title("Number of Stores Compared to Total Sales")
 plt.show()
 
-
-grouped_data_graphing = grouped_data.reset_index()
+grouped_data_graphing = grouped_data_booze.reset_index()
 
 # Plot total sale dollars over time
 plot_data = grouped_data_graphing.groupby('date')['sum_sale_dollars'].sum().reset_index()
@@ -147,14 +147,15 @@ data['date'] = pd.to_datetime(data['date'], errors='coerce')
 data['date'] = data['date'].dt.strftime('%Y').astype(int)
 
 combined_data =  pd.merge(data, pop_data, left_on = (['county', 'date']), right_on= (['County', 'Year']))
-grouped_data = combined_data.groupby(['county', 'date','alcohol_type']).agg(
+grouped_data_dead = combined_data.groupby(['county', 'date','alcohol_type']).agg(
     sum_sale_dollars = ('sale_dollars', 'sum'),
     avg_sale_dollars = ('sale_dollars', 'mean'),
 )
-print(grouped_data)
+print(grouped_data_dead)
 
+grouped_data_dead.to_csv("grouped_data_dead.csv", index=True)
 
-grouped_data_graphing = grouped_data.reset_index()
+grouped_data_graphing = grouped_data_dead.reset_index()
 plot_data = grouped_data_graphing.groupby('alcohol_type')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
 plt.bar(plot_data['alcohol_type'], plot_data['sum_sale_dollars'])
 plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
