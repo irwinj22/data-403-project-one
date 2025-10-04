@@ -12,7 +12,7 @@ The data that we are using is provided by the state of Iowa and contains informa
 
 The data source is linked here: <https://data.iowa.gov/Sales-Distribution/Iowa-Liquor-Sales/m3tr-qhgy/about_data>
 
-We collected this data with an API (virtual endpoint for data collection) and will be using data from January 1st, 2020 and onward. 
+We collected this data with an API (virtual endpoint for data collection) and will be using data from January 1st, 2022 and onward. 
 
 
 # Model Creation, Selection, and Validation

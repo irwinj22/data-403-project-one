@@ -8,7 +8,7 @@ format: pdf
 
 # Data Collection
 
-The data was collected from Iowa Liquor Sales using the API Socrata, it was filtered by transaction dates after the year 2020. For each client a, different subset of the data was filtered to help them individually.
+The data was collected from Iowa Liquor Sales using the API Socrata, it was filtered by transaction dates after the year 2022. For each client a, different subset of the data was filtered to help them individually.
 
 ### Chosen varibles
 
