@@ -1,0 +1,39 @@
+---
+title: "Data Preparation"
+subtitle: "Iowa Liquor Sales"
+author: "Hailey Ernest, James Irwin, Elliot Kunz, Kaatje Matthews-vanKoetsveld"
+date: today
+format: pdf
+---
+
+# Data Collection
+
+The data was collected from Iowa Liquor Sales using the API Socrata, it was filtered by transaction dates after the year 2020. For each client a, different subset of the data was filtered to help them individually.
+
+### Chosen varibles
+
+For Client A we collected “date” to extract the year, store “name” and “store” count for total bottles ordered per store, “bottle_volume_ml” to feature engineer average bottle cost, “sale_bottles”, “bottle_volume_ml”, “sale_bottles”, “state_bottle_cost”
+
+For Client B we collected date, county, sale_liters, category_name, sale_dollars
+
+### Outside Data
+
+
+
+
+# Data Cleaning
+
+
+
+# Feature Engeenering
+
+As mention in the Data Collection section, the team will be keeping the aforementioned variables from the original dataset for purposes of analysis in their respective project. All other factors from the original dataset are not included.
+
+### Parsing out Company Name
+In the given dataset, store name includes the name (Kum & Go, Hy-Vee, ect.), possibly the store number, and possibly the location of the store in one variable. To aggregate on store chains, we pulled out just the company name.
+
+### Reducing Alcohol Category Type
+The ‘Category Name’ field contains the category of the alcohol bought. These categories are overly specific, so we have reduced them into broader categories for easier aggregation. For example: “WHITE RUM” and “SPICED RUM” are both put in the “RUM” alcohol category. It is important to note that as of now, not all sales are placed into a reduced category. We have only parsed out the alcohol type for the 10 most common types in the dataset.
+
+### Population by County by Year
+For client B, we will be working with county data. Using the Iowa population data we've procured, we have just taken the relevant columns for all observations since 2020, and have summed the population by city to get population by county per year. This will be merged with the liquor sales by county per year so we can use it as a factor in our modeling.
