@@ -73,7 +73,7 @@ write.csv(client_b2, here::here("client_b_dead_transformed_.csv"))
 
 ### Population by County by Year
 
-Using the Iowa population data we've procured, we have just taken the relevant columns for all observations since 2020, and have summed the population by city to get population by county per year. This will be merged with the liquor sales by county per year so we can use it as a factor in our modeling.
+Using the Iowa population data we've procured, we have just taken the relevant columns for all observations since 2022, and have summed the population by city to get population by county per year. This will be merged with the liquor sales by county per year so we can use it as a factor in our modeling.
 
 ```{r}
 population <- read.csv(
@@ -85,14 +85,14 @@ population2 <- population |>
          Year = year(DATE)) |>
   group_by(County, Year) |>
   summarize(Population = sum(Estimate)) |>
-  filter(Year >= 2020)
+  filter(Year >= 2022)
 
 write.csv(population2, here::here("Population_in_Iowa_Transformed.csv"))
 ```
 
 ### Aggregations
 
-For Booze 'R' Us, we aggregated transaction information by company group for each year between 2020-2025.
+For Booze 'R' Us, we aggregated transaction information by company group for each year between 2022-2025.
 
 ```{python}
 # Group and aggregate columns for Booze R Us
@@ -110,7 +110,7 @@ grouped_data_booze = data.groupby(['company', 'date']).agg(
 grouped_data_booze.to_csv("grouped_data_booze.csv", index=True)
 ```
 
-For DEAD, we aggregated transaction information by county by alcohol type for each year between 2020-2025.
+For DEAD, we aggregated transaction information by county by alcohol type for each year between 2022-2025.
 
 ```{python}
 # Group and aggregate columns for DEAD
