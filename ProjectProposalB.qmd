@@ -20,14 +20,14 @@ The data that we are using is provided by the state of Iowa and contains informa
 
 The data source is linked here: <https://data.iowa.gov/Sales-Distribution/Iowa-Liquor-Sales/m3tr-qhgy/about_data>
 
-We collected this data with an API (virtual endpoint for data collection) and will be using data from January 1st, 2020 and onward. 
+We collected this data with an API (virtual endpoint for data collection) and will be using data from January 1st, 2022 and onward. 
 
 Additionally, we will be using Iowa population data provided by the Iowa Government: <https://catalog.data.gov/dataset/city-population-in-iowa-by-county-and-year>
 
 
 # Model Creation, Selection, and Validation
 
-In order to help Drinking Excess Alcohol is Dangerous (DEAD) accurately analyze patterns in sales to help them understand what factors drive higher or lower alcohol purchases, we need to understand the patterns across different counties and time periods. To achieve this goal, we have grouped the data to see each county’s total sale liters, average sale liters, number of transactions, and sales by alcohol category, all organized by month.  Some visualizations of this data are shown here: 
+In order to help Drinking Excess Alcohol is Dangerous (DEAD) accurately analyze patterns in sales to help them understand what factors drive higher or lower alcohol purchases, we need to understand the patterns across different counties and time periods. To achieve this goal, we have grouped the data to see each county’s total sale liters, average sale liters, number of transactions, and sales by alcohol category, all organized by year.  Some visualizations of this data are shown here: 
 
 ```{python}
 # Total Sales by Each Catagory of Alcohol

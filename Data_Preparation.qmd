@@ -9,7 +9,9 @@ eval: false
 
 # Data Collection
 
-The data was collected from Iowa Liquor Sales using the API Socrata, it was filtered by transaction dates after the year 2020. For each client a different subset of the data was filtered to help them individually.
+The data was collected from Iowa Liquor Sales using the API Socrata, it was filtered by transaction dates after the year 2022. For each client a, different subset of the data was filtered to help them individually.
+
+### Chosen varibles
 
 For Client A we collected “date” to extract the year, store “name” and “store” count for total bottles ordered per store, “bottle_volume_ml” and “state_bottle_cost” to feature engineer average bottle cost, “sale_bottles” the number of bottles sold, and “category_name” for the type of liquor.
 
