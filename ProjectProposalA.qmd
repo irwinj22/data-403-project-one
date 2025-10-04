@@ -1,0 +1,27 @@
+---
+title: "Project Proposal A"
+subtitle: "Client: Booze ‘R’ Us"
+author: "Hailey Ernest, James Irwin, Elliot Kunz, Kaatje Matthews-vanKoetsveld"
+date: today
+format: pdf
+---
+
+# Data Summary
+
+The data that we are using is provided by the state of Iowa and contains information about wholesale spirit purchases made by Iowa Class “E” liquor licensees. Class “E” licenses are for grocery stores, liquor stores, and convenience stores, among other establishments. 
+
+The data source is linked here: <https://data.iowa.gov/Sales-Distribution/Iowa-Liquor-Sales/m3tr-qhgy/about_data>
+
+We collected this data with an API (virtual endpoint for data collection) and will be using data from January 1st, 2020 and onward. 
+
+
+# Model Creation, Selection, and Validation
+
+In order to help Booze ‘R’ Us accurately project sales and confidently expand into other states, we need to understand the characteristics and sales of other chains that sell liquor. To achieve this goal, we have grouped the data to see each chain’s total sale dollars, average sale dollars, number of bottles sold, number of transactions, and number of stores all organized by month and year. Some visualizations of this data are shown here:
+
+With this data, we will be able to fit various linear models that predict total alcohol sales from different combinations of chain characteristics. Once we have fitted these models, we can compare them using cross-validation and select the ones that perform the best. This method will ensure that we provide the strongest, most accurate model(s) that will best help Booze ‘R’ Us predict its sales and expand into other states.
+
+
+# Conclusions and Deliverables
+
+After our model creation and analysis, Booze ‘R’ Us will be able to accurately predict sales data. Additionally, Booze ‘R’ Us will have an improved understanding of the characteristics that affect chain sales so that it can formulate a reliable and comprehensive plan to expand its footprint. We appreciate the opportunity to present our proposal and look forward to working with Booze ‘R’ Us. 
