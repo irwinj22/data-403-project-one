@@ -76,9 +76,12 @@ write.csv(client_b2, here::here("client_b_dead_transformed_.csv"))
 
 
 ```{python}
+# imports
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+# Group and aggregate columns for Booze R Us
 data = pd.read_csv("client_a_booze_r_us_transformed.csv")
 data['date'] = pd.to_datetime(data['date'], errors='coerce')
 data['date'] = data['date'].dt.strftime('%Y-%m')
@@ -104,9 +107,10 @@ plt.xlabel("Number of Stores")
 plt.title("Number of Stores Compared to Total Sales")
 plt.show()
 
-grouped_data_graphing = grouped_data_booze.reset_index()
+
 
 # Plot total sale dollars over time
+grouped_data_graphing = grouped_data_booze.reset_index()
 plot_data = grouped_data_graphing.groupby('date')['sum_sale_dollars'].sum().reset_index()
 plt.bar(plot_data['date'], plot_data['sum_sale_dollars'])
 plt.ylabel("Total Sale Dollars (1 Million $ Scale)")
@@ -116,6 +120,7 @@ plt.xticks(rotation=45)
 plt.show()
 
 
+# Plot total sale dollars over time (Seperate Years) 
 plot_data['date'] = pd.to_datetime(plot_data['date'], errors='coerce')
 plot_data['year'] = plot_data['date'].dt.year
 plot_data['month'] = plot_data['date'].dt.strftime('%b')
@@ -133,19 +138,18 @@ for yr in sorted(plot_data['year'].unique()):
 ```
 
 ```{python}
+# imports
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+# Group and aggregate columns for DEAD
 data = pd.read_csv("client_b_dead_transformed.csv")
 pop_data = pd.read_csv('Population_in_Iowa_Transformed.csv')
-
 data['county'] = data['county'].astype(str).str.strip().str.lower()
 pop_data['County'] = pop_data['County'].astype(str).str.strip().str.lower()
-
-
 data['date'] = pd.to_datetime(data['date'], errors='coerce')
 data['date'] = data['date'].dt.strftime('%Y').astype(int)
-
 combined_data =  pd.merge(data, pop_data, left_on = (['county', 'date']), right_on= (['County', 'Year']))
 grouped_data_dead = combined_data.groupby(['county', 'date','alcohol_type']).agg(
     sum_sale_dollars = ('sale_dollars', 'sum'),
@@ -155,6 +159,7 @@ print(grouped_data_dead)
 
 grouped_data_dead.to_csv("grouped_data_dead.csv", index=True)
 
+# Total Sales by Each Catagory of Alcohol
 grouped_data_graphing = grouped_data_dead.reset_index()
 plot_data = grouped_data_graphing.groupby('alcohol_type')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
 plt.bar(plot_data['alcohol_type'], plot_data['sum_sale_dollars'])
@@ -164,7 +169,7 @@ plt.title("Total Sales by Alcohol Type")
 plt.xticks(rotation = 45)
 plt.show()
 
-
+# Plot Total Sale Dollars to Each County
 plot_data_2 = grouped_data_graphing.groupby('county')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
 plt.bar(plot_data_2['county'], plot_data_2['sum_sale_dollars'])
 plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
@@ -173,7 +178,7 @@ plt.title("County Spending")
 plt.xticks(rotation=90)
 plt.show()
 
-# PLot only the 25 highest Counties
+# Plot only the 25 highest Counties
 plt.bar(plot_data_2['county'].tail(25), plot_data_2['sum_sale_dollars'].tail(25))
 plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
 plt.xlabel("County")
@@ -181,9 +186,4 @@ plt.title("County Spending (Top 25 Counties)")
 plt.xticks(rotation=90)
 plt.show()
 ```
-
-
-## Clean
-
-## Visualization
 
