@@ -6,6 +6,14 @@ date: today
 format: pdf
 jupyter: python3
 ---
+```{python}
+#|include: false
+# imports
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+grouped_data_booze = pd.read_csv("grouped_data_dead.csv")
+```
 
 # Data Summary
 
@@ -15,10 +23,41 @@ The data source is linked here: <https://data.iowa.gov/Sales-Distribution/Iowa-L
 
 We collected this data with an API (virtual endpoint for data collection) and will be using data from January 1st, 2022 and onward. 
 
+Additionally, we will be using Iowa population data provided by the Iowa Government: <https://catalog.data.gov/dataset/city-population-in-iowa-by-county-and-year>
+
 
 # Model Creation, Selection, and Validation
 
 In order to help Drinking Excess Alcohol is Dangerous (DEAD) accurately analyze patterns in sales to help them understand what factors drive higher or lower alcohol purchases, we need to understand the patterns across different counties and time periods. To achieve this goal, we have grouped the data to see each county’s total sale liters, average sale liters, number of transactions, and sales by alcohol category, all organized by year.  Some visualizations of this data are shown here: 
+
+```{python}
+# Total Sales by Each Catagory of Alcohol
+grouped_data_graphing = grouped_data_dead.reset_index()
+plot_data = grouped_data_graphing.groupby('alcohol_type')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
+plt.bar(plot_data['alcohol_type'], plot_data['sum_sale_dollars'])
+plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
+plt.xlabel("Alcohol Type")
+plt.title("Total Sales by Alcohol Type")
+plt.xticks(rotation = 45)
+plt.show()
+
+# Plot Total Sale Dollars to Each County
+plot_data_2 = grouped_data_graphing.groupby('county')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
+plt.bar(plot_data_2['county'], plot_data_2['sum_sale_dollars'])
+plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
+plt.xlabel("County")
+plt.title("County Spending")
+plt.xticks(rotation=90)
+plt.show()
+
+# Plot only the 25 highest Counties
+plt.bar(plot_data_2['county'].tail(25), plot_data_2['sum_sale_dollars'].tail(25))
+plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
+plt.xlabel("County")
+plt.title("County Spending (Top 25 Counties)")
+plt.xticks(rotation=90)
+plt.show()
+```
 
 With this data format, we will be able to run statistical testing and regression analysis to find which characteristics significantly drive the amount of alcohol sold. We will examine relationships between alcohol purchases and county population, as well as sales by alcohol types. Once we have analyzed these relationships, we can calculate the strength of them to determine the impact they have and find the drive for alcohol sales. This will provide the best and full analysis of patterns on high purchases to inform DEAD and help make alcohol purchases safer in Iowa. 
 
