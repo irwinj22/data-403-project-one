@@ -5,6 +5,14 @@ author: "Hailey Ernest, James Irwin, Elliot Kunz, Kaatje Matthews-vanKoetsveld"
 date: today
 format: pdf
 ---
+```{python}
+#|include: false
+# imports
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+grouped_data_booze = pd.read_csv("grouped_data_booze.csv")
+```
 
 # Data Summary
 
@@ -18,6 +26,44 @@ We collected this data with an API (virtual endpoint for data collection) and wi
 # Model Creation, Selection, and Validation
 
 In order to help Booze ‘R’ Us accurately project sales and confidently expand into other states, we need to understand the characteristics and sales of other chains that sell liquor. To achieve this goal, we have grouped the data to see each chain’s total sale dollars, average sale dollars, number of bottles sold, number of transactions, and number of stores all organized by month and year. Some visualizations of this data are shown here:
+
+```{python}
+# Plot Number of Stores vs Total Sales
+slope, intercept = np.polyfit(grouped_data_booze['num_stores'], grouped_data_booze['sum_sale_dollars'], 1)
+line_of_best_fit = slope * grouped_data_booze['num_stores'] + intercept
+
+plt.scatter(grouped_data_booze['num_stores'], grouped_data_booze['sum_sale_dollars'])
+plt.plot(grouped_data_booze['num_stores'], line_of_best_fit, color='red', label='Line of Best Fit')
+plt.ylabel("Total Sale Dollars (100,000 $ Scale)")
+plt.xlabel("Number of Stores")
+plt.title("Number of Stores Compared to Total Sales")
+plt.show()
+
+
+# Plot total sale dollars over time
+grouped_data_graphing = grouped_data_booze.reset_index()
+plot_data = grouped_data_graphing.groupby('date')['sum_sale_dollars'].sum().reset_index()
+plt.bar(plot_data['date'], plot_data['sum_sale_dollars'])
+plt.ylabel("Total Sale Dollars (1 Million $ Scale)")
+plt.xlabel("Date (Month)")
+plt.title("Customer Spending Trend Over Time")
+plt.xticks(rotation=45)
+plt.show()
+
+# Plot total sale dollars over time (Seperate Years) 
+plot_data['date'] = pd.to_datetime(plot_data['date'], errors='coerce')
+plot_data['year'] = plot_data['date'].dt.year
+plot_data['month'] = plot_data['date'].dt.strftime('%b')
+
+for yr in sorted(plot_data['year'].unique()):
+    yearly_data = plot_data[plot_data['year'] == yr]
+    plt.bar(yearly_data['month'], yearly_data['sum_sale_dollars'])
+    plt.ylabel("Total Sale Dollars (1 Million $ Scale)")
+    plt.xlabel("Month")
+    plt.title(f"Customer Spending Trend in {yr}")
+    plt.xticks(rotation=45)
+    plt.show()
+```
 
 With this data, we will be able to fit various linear models that predict total alcohol sales from different combinations of chain characteristics. Once we have fitted these models, we can compare them using cross-validation and select the ones that perform the best. This method will ensure that we provide the strongest, most accurate model(s) that will best help Booze ‘R’ Us predict its sales and expand into other states.
 
