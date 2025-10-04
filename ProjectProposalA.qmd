@@ -4,6 +4,7 @@ subtitle: "Client: Booze ‘R’ Us"
 author: "Hailey Ernest, James Irwin, Elliot Kunz, Kaatje Matthews-vanKoetsveld"
 date: today
 format: pdf
+jupyter: python3
 ---
 
 # Data Summary
