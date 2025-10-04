@@ -16,9 +16,7 @@ The data was collected from Iowa Liquor Sales using the API Socrata, it was filt
 
 For Client A we collected “date” to extract the year, store “name” and “store” count for total bottles ordered per store, “bottle_volume_ml” and “state_bottle_cost” to feature engineer average bottle cost, “sale_bottles” the number of bottles sold, and “category_name” for the type of liquor.
 
-For Client B we collected “date” to extract the year, “county” where the store sold liquor, “sale_liters” total volume sold, “category_name” for the type of liquor to find sale trends by category, and “sale_dollars” total cost. We collected an additional dataset of population that will be joined by county, we will analyse trends of liquor sold by county population.
-
-Population: For Client B, we will be working with county data. Therefore, we have brought in population data by county by year for Iowa to the most current year (2025). The populations of cities are calculated every year by the state of Iowa government. To use this for data analysis, we will aggregate the city populations in each county to get a total population per county. <https://catalog.data.gov/dataset/city-population-in-iowa-by-county-and-year>
+For Client B we collected “date” to extract the year, “county” where the store sold liquor, “sale_liters” total volume sold, “category_name” for the type of liquor to find sale trends by category, and “sale_dollars” total cost. Additionally, we have brought in population data by county by year for Iowa to the most current year (2025). The populations of cities are calculated every year by the state of Iowa government. <https://catalog.data.gov/dataset/city-population-in-iowa-by-county-and-year>
 
 # Feature Engeenering
 

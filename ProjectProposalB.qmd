@@ -5,6 +5,7 @@ author: "Hailey Ernest, James Irwin, Elliot Kunz, Kaatje Matthews-vanKoetsveld"
 date: today
 format: pdf
 jupyter: python3
+echo: false
 ---
 
 # Data Summary
