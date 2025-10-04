@@ -32,7 +32,7 @@ write.csv(population2, here::here("Population_in_Iowa_Transformed.csv"))
 # Feature Engeenering for Client A
 
 ```{r}
-client_a <- read.csv(here::here("client_a_booze_r_us.csv"))
+client_a <- read.csv(here::here("client_a_booze_r_us (1).csv"))
 ```
 ```{r}
 client_a2  <- client_a |>
@@ -51,7 +51,7 @@ write.csv(client_a2, here::here("client_a_booze_r_us_transformed.csv"))
 # Feature Engeenering for Client B
 
 ```{r}
-client_b <- read.csv(here::here("client_b_dead.csv"))
+client_b <- read.csv(here::here("client_b_dead (1).csv"))
 ```
 ```{r}
 client_b2 <- client_b |>
@@ -98,7 +98,7 @@ line_of_best_fit = slope * grouped_data['num_stores'] + intercept
 
 plt.scatter(grouped_data['num_stores'], grouped_data['sum_sale_dollars'])
 plt.plot(grouped_data['num_stores'], line_of_best_fit, color='red', label='Line of Best Fit')
-plt.ylabel("Total Sale Dollars")
+plt.ylabel("Total Sale Dollars (100,000 $ Scale)")
 plt.xlabel("Number of Stores")
 plt.title("Number of Stores Compared to Total Sales")
 plt.show()
@@ -109,11 +109,26 @@ grouped_data_graphing = grouped_data.reset_index()
 # Plot total sale dollars over time
 plot_data = grouped_data_graphing.groupby('date')['sum_sale_dollars'].sum().reset_index()
 plt.bar(plot_data['date'], plot_data['sum_sale_dollars'])
-plt.ylabel("Total Sale Dollars")
+plt.ylabel("Total Sale Dollars (1 Million $ Scale)")
 plt.xlabel("Date (Month)")
 plt.title("Customer Spending Trend Over Time")
 plt.xticks(rotation=45)
 plt.show()
+
+
+plot_data['date'] = pd.to_datetime(plot_data['date'], errors='coerce')
+plot_data['year'] = plot_data['date'].dt.year
+plot_data['month'] = plot_data['date'].dt.strftime('%b')
+
+for yr in sorted(plot_data['year'].unique()):
+    yearly_data = plot_data[plot_data['year'] == yr]
+    plt.bar(yearly_data['month'], yearly_data['sum_sale_dollars'])
+    plt.ylabel("Total Sale Dollars (1 Million $ Scale)")
+    plt.xlabel("Month")
+    plt.title(f"Customer Spending Trend in {yr}")
+    plt.xticks(rotation=45)
+    plt.show()
+
 
 ```
 
@@ -142,7 +157,7 @@ print(grouped_data)
 grouped_data_graphing = grouped_data.reset_index()
 plot_data = grouped_data_graphing.groupby('alcohol_type')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
 plt.bar(plot_data['alcohol_type'], plot_data['sum_sale_dollars'])
-plt.ylabel("Total Sale Dollars (10 Million)")
+plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
 plt.xlabel("Alcohol Type")
 plt.title("Total Sales by Alcohol Type")
 plt.xticks(rotation = 45)
@@ -151,9 +166,17 @@ plt.show()
 
 plot_data_2 = grouped_data_graphing.groupby('county')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
 plt.bar(plot_data_2['county'], plot_data_2['sum_sale_dollars'])
-plt.ylabel("Total Sale Dollars")
+plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
 plt.xlabel("County")
-plt.title("County Spending Trend Over Time")
+plt.title("County Spending")
+plt.xticks(rotation=90)
+plt.show()
+
+# PLot only the 25 highest Counties
+plt.bar(plot_data_2['county'].tail(25), plot_data_2['sum_sale_dollars'].tail(25))
+plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
+plt.xlabel("County")
+plt.title("County Spending (Top 25 Counties)")
 plt.xticks(rotation=90)
 plt.show()
 ```
