@@ -76,7 +76,8 @@ write.csv(client_b2, here::here("client_b_dead_transformed_.csv"))
 Using the Iowa population data we've procured, we have just taken the relevant columns for all observations since 2020, and have summed the population by city to get population by county per year. This will be merged with the liquor sales by county per year so we can use it as a factor in our modeling.
 
 ```{r}
-population <- read.csv(here::here("City_Population_in_Iowa_by_County_and_Year.csv"))
+population <- read.csv(
+  here::here("City_Population_in_Iowa_by_County_and_Year.csv"))
 
 population2 <- population |>
   select(County, City, Year, Estimate) |>
@@ -119,11 +120,13 @@ data['county'] = data['county'].astype(str).str.strip().str.lower()
 pop_data['County'] = pop_data['County'].astype(str).str.strip().str.lower()
 data['date'] = pd.to_datetime(data['date'], errors='coerce')
 data['date'] = data['date'].dt.strftime('%Y').astype(int)
-combined_data =  pd.merge(data, pop_data, left_on = (['county', 'date']), right_on= (['County', 'Year']))
-grouped_data_dead = combined_data.groupby(['county', 'date','alcohol_type']).agg(
+combined_data =  pd.merge(data, pop_data, 
+              left_on = (['county', 'date']), right_on= (['County', 'Year']))
+grouped_data_dead = (combined_data.groupby(['county', 'date','alcohol_type'])
+.agg(
     sum_sale_dollars = ('sale_dollars', 'sum'),
     avg_sale_dollars = ('sale_dollars', 'mean'),
-)
+))
 
 grouped_data_dead.to_csv("grouped_data_dead.csv", index=True)
 ```
