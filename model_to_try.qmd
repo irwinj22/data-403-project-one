@@ -1,0 +1,17 @@
+Booze Models
+
+
+Predict sum Sale Dollars from date, bottles_sold,
+
+Predict sum Sale Dollars from num_transactions, num_stores
+
+Predict sum Sale Dollars from num stores for companys with large amount of stores
+
+
+DEAD Models
+
+Predict sum Sale Dollars from county, alcohol type
+
+Predict sum Sale Dollars from population and date
+
+Predict sum Sale Dollars from alcohol type

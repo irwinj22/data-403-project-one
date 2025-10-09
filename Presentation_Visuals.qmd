@@ -15,9 +15,6 @@ import matplotlib.pyplot as plt
 grouped_data_booze = pd.read_csv("grouped_data_booze.csv")
 grouped_data_dead = pd.read_csv("grouped_data_dead.csv")
 
-
-
-
 # Graphs for Booze Presentation
 # Plot Number of Stores vs Total Sales
 slope, intercept = np.polyfit(grouped_data_booze['num_stores'], grouped_data_booze['sum_sale_dollars'], 1)
@@ -81,6 +78,7 @@ plt.legend(title='Year')
 plt.show()
 
 # Graphs for Dead Presentation
+
 grouped_data_graphing = grouped_data_dead.reset_index()
 plot_data = grouped_data_graphing.groupby('alcohol_type')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
 plt.bar(plot_data['alcohol_type'], plot_data['sum_sale_dollars'])
@@ -92,13 +90,6 @@ plt.show()
 
 # Plot Total Sale Dollars to Each County
 plot_data_2 = grouped_data_graphing.groupby('county')['sum_sale_dollars'].sum().reset_index().sort_values(by='sum_sale_dollars')
-plt.bar(plot_data_2['county'], plot_data_2['sum_sale_dollars'])
-plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
-plt.xlabel("County")
-plt.title("County Spending")
-plt.xticks(rotation=90)
-plt.show()
-
 # Plot only the 25 highest Counties
 plt.bar(plot_data_2['county'].tail(25), plot_data_2['sum_sale_dollars'].tail(25))
 plt.ylabel("Total Sale Dollars (10 Million $ Scale)")
@@ -110,19 +101,36 @@ plt.show()
 
 # Plot Total Sale Dollars to Each County
 plot_data_3 = grouped_data_graphing.groupby('county')['population'].sum().reset_index().sort_values(by='population')
-plt.scatter(plot_data_3['county'], plot_data_3['population'])
-plt.ylabel("Total Population")
-plt.xlabel("County")
-plt.title("County Populations")
-plt.xticks(rotation=90)
-plt.show()
-
 # Plot only the 25 highest Counties
 plt.scatter(plot_data_3['county'].tail(25), plot_data_3['population'].tail(25))
 plt.ylabel("Total Population")
 plt.xlabel("County")
 plt.title("County Populations (Top 25 Counties)")
 plt.xticks(rotation=90)
+plt.show()
+
+# Plot only the 25 highest Counties - Overlap Population and Sale Dollars
+top25_sales = plot_data_2.tail(25).copy()
+pop_by_county = grouped_data_graphing.groupby('county')['population'].mean().reset_index()
+top25 = top25_sales.merge(pop_by_county, on='county', how='left')
+
+# Plot bars for sales and overlay population
+fig, ax = plt.subplots(figsize=(12, 8))
+indices = range(len(top25))
+bars = ax.bar(indices, top25['sum_sale_dollars'], color='C0')
+ax.set_xticks(indices)
+ax.set_xticklabels(top25['county'], rotation=90, fontsize=12)
+ax.set_ylabel("Total Sale Dollars (10 Million $ Scale)", fontsize=18)
+ax.set_xlabel("County", fontsize=18)
+ax.set_title("County Spending (Top 25 Counties) with Population Overlay", fontsize=20)
+# Secondary axis for population
+ax2 = ax.twinx()
+ax2.scatter(indices, top25['population'], color='red', zorder=5)
+ax2.set_ylabel('Population', color='red', fontsize=18)
+# Increase tick label sizes for both axes
+ax.tick_params(axis='x', labelsize=16)
+ax.tick_params(axis='y', labelsize=16)
+ax2.tick_params(axis='y', labelsize=16)
 plt.show()
 
 
