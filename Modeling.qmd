@@ -3,7 +3,49 @@ title: "Custom Modeling"
 format: html
 ---
 
-## Custom Functions:
+#Set up
+```{r}
+library(tidyverse)
+booze <- read.csv(here::here("grouped_data_booze.csv"))
+DEAD <- read.csv(here::here("grouped_data_dead.csv"))
+```
+
+```{r}
+booze <- booze |>
+  mutate(
+    company = as.factor(company),
+    date = as.Date(paste0(date, "-01")),
+    year = as.numeric(format(date, "%Y")),
+    month = as.numeric(format(date, "%m"))
+  )
+
+booze_large_chains <- booze |>
+  filter(num_stores >= 5)
+
+DEAD <- DEAD |>
+  mutate(
+    county = as.factor(county),
+    alcohol_type = as.factor(alcohol_type),
+    year = date
+  )
+
+#one-hot encoding
+  alcohol_dummies <- model.matrix(~ alcohol_type, data = DEAD)
+  alcohol_dummies <- alcohol_dummies[, -1]
+  X <- cbind(features, alcohol_dummies)
+  X <- cbind(intercept = 1, X)
+  X <- as.matrix(X)
+  y <- as.matrix(data[[response_var]])
+  return(list(
+    X = X,
+    y = y,
+    feature_names = colnames(X)
+  ))
+}
+```
+
+
+# Custom Functions:
 ```{r}
 cross_validation_split <- function(dataset, k) {
   set.seed(40313)
@@ -23,20 +65,24 @@ fit_cv <- function(dataset, predictor_cols, response, k=5) {
   metrics <- c()
   for(i in 1:k) {
     test_set <- df_cv[df_cv$cv_group == i, ]
-    train_set <-  df_cv[df_cv$group != i, ]
-    model <- fit_linear_model(train_set[, predictor_cols])
-    test.predictions <- predict_linear(model, test_set[, predictor_cols])
-    r2 <- calculate_r2(test_set[, response], test.predictions)
+    train_set <-  df_cv[df_cv$cv_group != i, ]
+    X_train <- as.matrix(train_set[, predictor_cols])
+    X_train <- cbind(intercept = 1, X_train)
+    y_train <- as.matrix(train_set[, response])
+    X_test <- as.matrix(test_set[, predictor_cols])
+    X_test <- cbind(intercept = 1, X_test)
+    y_test <- as.vector(test_set[, response])
+    model <- fit_linear_model(X_train, y_train)
+    test.predictions <- predict_linear(model, X_test)
+    r2 <- calculate_r2(y_test, test.predictions)
     metrics <- c(metrics, r2)
   }
   cv_r2 <- sum(metrics)/k
+  return(cv_r2)
 }
 ```
 
-
-
 ```{r}
-#fit linear regression
 fit_linear_model <- function(X, y) {
   XtX <- t(X) %*% X
   XtX_inv <- solve(XtX)
@@ -61,6 +107,162 @@ calculate_r2 <- function(y_true, y_pred) {
   r2 <- 1 - (ss_res / ss_tot)
   return(r2)
 }
+```
+
+
+# Booze Models
+```{r}
+predictor_cols <- c("num_stores", "year", "month")
+response <- "sum_sale_dollars"
+results <- fit_cv(booze, predictor_cols, response, k = 10)
+print(paste("CV R^2:", round(results, 4)))
+```
+```{r}
+predictor_cols <- c("num_stores", "year", "month")
+response <- "sum_sale_dollars"
+results <- fit_cv(booze_large_chains, predictor_cols, response, k = 10)
+print(paste("CV R^2:", round(results, 4)))
+```
+```{r}
+X <- as.matrix(booze[, predictor_cols])
+X <- cbind(intercept = 1, X)
+y <- as.matrix(booze[, response])
+    
+model <- fit_linear_model(X, y)
+print(model)
+```
+
+
+# DEAD Models
+```{r}
+predictor_cols <- c("population", "year")
+response <- "sum_sale_dollars"
+results <- fit_cv(DEAD, predictor_cols, response, k = 10)
+print(paste("CV R^2:", round(results, 4)))
+```
+
+```{r}
+predictor_cols <- c("population", "alchol_type")
+response <- "sum_sale_dollars"
+results <- fit_cv(DEAD, predictor_cols, response, k = 10)
+print(paste("CV R^2:", round(results, 4)))
+```
+
+
+```{r}
+predictor_cols <- c("population", "year", "alchol_type")
+response <- "sum_sale_dollars"
+results <- fit_cv(DEAD, predictor_cols, response, k = 10)
+print(paste("CV R^2:", round(results, 4)))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### UNNEEDED \/
+
+```{r}
+library(dplyr)
+fit_linear_model <- function(X, y) {
+  XtX <- t(X) %*% X
+  XtX_inv <- solve(XtX)
+  Xty <- t(X) %*% y
+  coefficients <- XtX_inv %*% Xty
+  return(list(
+    coefficients = as.vector(coefficients),
+    feature_names = colnames(X)
+  ))
+}
+predict_linear <- function(model, X_new) {
+  predictions <- X_new %*% model$coefficients
+  return(as.vector(predictions))
+}
+calculate_r2 <- function(y_true, y_pred) {
+  ss_res <- sum((y_true - y_pred)^2)
+  ss_tot <- sum((y_true - mean(y_true))^2)
+  r2 <- 1 - (ss_res / ss_tot)
+  return(r2)
+}
+
+
+booze <- read.csv("grouped_data_booze.csv")
+data_prep_matrix <- booze |>
+  mutate(
+    date = as.Date(paste0(date, "-01")),
+    year = as.numeric(format(date, "%Y")),
+    month = as.numeric(format(date, "%m"))
+  )
+company_counts <- data_prep_matrix |>
+  count(company) |>
+  filter(n >= 20)
+data_prep_matrix <- data_prep_matrix |>
+  filter(company %in% company_counts$company)
+
+
+
+cross_validation_split <- function(dataset, k) {
+  set.seed(40313)
+  n <- nrow(dataset)
+  groups <- 1:k
+  assignments <- rep(c(groups), length.out=n)
+  assignments <- sample(assignments)
+  dataset[["cv_group"]] <- assignments
+  return(dataset)
+}
+fit_cv <- function(dataset, predictor_cols, response, k=5) {
+  df_cv <- cross_validation_split(dataset, k)
+  cv_groups <- df_cv$cv_group
+  metrics <- c()
+  for(i in 1:k) {
+    test_set <- df_cv[df_cv$cv_group == i, ]
+    train_set <-  df_cv[df_cv$cv_group != i, ]
+    X_train <- as.matrix(train_set[, predictor_cols])
+    X_train <- cbind(intercept = 1, X_train)
+    y_train <- as.matrix(train_set[, response])
+    X_test <- as.matrix(test_set[, predictor_cols])
+    X_test <- cbind(intercept = 1, X_test)
+    y_test <- as.vector(test_set[, response])
+    model <- fit_linear_model(X_train, y_train)
+    test.predictions <- predict_linear(model, X_test)
+    r2 <- calculate_r2(y_test, test.predictions)
+    metrics <- c(metrics, r2)
+  }
+  cv_r2 <- sum(metrics)/k
+  return(cv_r2)
+}
+
+
+
+predictor_cols <- c("year", "month", "bottles_sold", "num_transactions", "num_stores")
+response <- "sum_sale_dollars"
+results <- fit_cv(data_prep_matrix, predictor_cols, response, k = 5)
+print(paste("CV R^2:", round(results, 4)))
+```
+
+
+```{r}
 
 #RMSE
 calculate_rmse <- function(y_true, y_pred) {
