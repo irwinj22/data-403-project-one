@@ -30,18 +30,11 @@ DEAD <- DEAD |>
   )
 
 #one-hot encoding
-  alcohol_dummies <- model.matrix(~ alcohol_type, data = DEAD)
-  alcohol_dummies <- alcohol_dummies[, -1]
-  X <- cbind(features, alcohol_dummies)
-  X <- cbind(intercept = 1, X)
-  X <- as.matrix(X)
-  y <- as.matrix(data[[response_var]])
-  return(list(
-    X = X,
-    y = y,
-    feature_names = colnames(X)
-  ))
-}
+county_dummies <- model.matrix(~ county, data = DEAD)
+county_dummies <- county_dummies[, -1]
+alcohol_dummies <- model.matrix(~ alcohol_type, data = DEAD)
+alcohol_dummies <- alcohol_dummies[, -1]
+DEAD <- cbind(DEAD, county_dummies, alcohol_dummies)
 ```
 
 
@@ -142,7 +135,7 @@ print(paste("CV R^2:", round(results, 4)))
 ```
 
 ```{r}
-predictor_cols <- c("population", "alchol_type")
+predictor_cols <- c("population", "alcohol_typeCOCKTAILS", "alcohol_typeGIN", "alcohol_typeLIQUEUR", "alcohol_typeRUM", "alcohol_typeSCHNAPPS", "alcohol_typeSCOTCH","alcohol_typeTEQUILA", "alcohol_typeVODKA", "alcohol_typeWHISKEY")
 response <- "sum_sale_dollars"
 results <- fit_cv(DEAD, predictor_cols, response, k = 10)
 print(paste("CV R^2:", round(results, 4)))
@@ -150,14 +143,23 @@ print(paste("CV R^2:", round(results, 4)))
 
 
 ```{r}
-predictor_cols <- c("population", "year", "alchol_type")
+predictor_cols <- c("population", "year", "alcohol_typeCOCKTAILS", "alcohol_typeGIN", "alcohol_typeLIQUEUR", "alcohol_typeRUM", "alcohol_typeSCHNAPPS", "alcohol_typeSCOTCH","alcohol_typeTEQUILA", "alcohol_typeVODKA", "alcohol_typeWHISKEY")
 response <- "sum_sale_dollars"
 results <- fit_cv(DEAD, predictor_cols, response, k = 10)
 print(paste("CV R^2:", round(results, 4)))
 ```
 
 
-
+Final model:
+```{r}
+predictor_cols <- c("population", "alcohol_typeCOCKTAILS", "alcohol_typeGIN", "alcohol_typeLIQUEUR", "alcohol_typeRUM", "alcohol_typeSCHNAPPS", "alcohol_typeSCOTCH","alcohol_typeTEQUILA", "alcohol_typeVODKA", "alcohol_typeWHISKEY")
+X <- as.matrix(DEAD[, predictor_cols])
+X <- cbind(intercept = 1, X)
+y <- as.matrix(DEAD[, response])
+    
+model <- fit_linear_model(X, y)
+print(model)
+```
 
 
 
