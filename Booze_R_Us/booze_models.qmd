@@ -6,10 +6,9 @@ jupyter: python3
 ---
 
 # Set Up
-
 ```{r}
 library(tidyverse)
-booze <- read.csv(here::here("../data/grouped_data_booze.csv"))
+booze <- read.csv(here::here("data/grouped_data_booze.csv"))
 ```
 
 # Booze Models
