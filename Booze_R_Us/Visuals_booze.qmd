@@ -36,15 +36,13 @@ company_avg = monthly.groupby('company', as_index=False)['sum_sale_dollars'].mea
 stores = gdb.groupby('company', as_index=False)['num_stores'].max() 
 company_stats = pd.merge(company_avg, stores, on='company', how='left') 
 company_stats = company_stats.dropna(subset=['num_stores']) 
-plt.figure(figsize=(10, 6)) 
 slope_k, intercept_k = np.polyfit(company_stats['num_stores'], company_stats['avg_monthly_sales'], 1) 
 lobf_k = slope_k * company_stats['num_stores'] + intercept_k 
 plt.scatter(company_stats['num_stores'], company_stats['avg_monthly_sales']) 
-plt.plot(company_stats['num_stores'], lobf_k, color='red', label='Line of Best Fit') 
+plt.plot(company_stats['num_stores'], lobf_k, color='red') 
 plt.ylabel("Average Monthly Sales ($100,000 Scale)") 
 plt.xlabel("Number of Stores") 
 plt.title("Company Average Monthly Sales vs Number of Stores") 
-plt.legend()
 plt.show()
 
 # Plot total sale dollars over time

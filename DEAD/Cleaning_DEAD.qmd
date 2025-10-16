@@ -23,11 +23,11 @@ population <- read.csv(here::here("data/City_Population_in_Iowa_by_County_and_Ye
 # Clean Population Data - get population by county and year
 population2 <- population |>
   select(County, City, Year, Estimate) |>
+  filter(Year >= 2022)
   mutate(DATE = as.Date(Year, format="%B %d %Y"),
          Year = year(DATE)) |>
   group_by(County, Year) |>
   summarize(Population = sum(Estimate)) |>
-  filter(Year >= 2020)
 ```
 
 ```{r}
