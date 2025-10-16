@@ -9,7 +9,7 @@ jupyter: python3
 
 ```{r}
 library(tidyverse)
-DEAD <- read.csv(here::here("../data/grouped_data_dead.csv"))
+DEAD <- read.csv(here::here("data/grouped_data_dead.csv"))
 ```
 
 ```{r}
