@@ -6,14 +6,17 @@ jupyter: python3
 ---
 
 ```{r}
+# imports
 library(tidyverse)
 ```
 
 ```{r}
+# Read in Booze_R_Us data
 client_a <- read.csv(here::here("../data/booze_r_us.csv"))
 ```
 
 ```{r}
+# Clean Company Names for Grouping
 client_a2  <- client_a |>
   mutate(
     company = sub(" [0-9]+",
@@ -23,6 +26,8 @@ client_a2  <- client_a |>
                       sub("/.*", "",name))),
     company = trimws(company, which="right")
   )
+
+# Write cleaned data to new csv
 write.csv(client_a2, here::here("../data/booze_r_us_transformed.csv"))
 ```
 
@@ -33,9 +38,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Group and aggregate columns for Booze R Us
+
+# Data
 data = pd.read_csv("../data/booze_r_us_transformed.csv")
+
+# Preprocessing
 data['date'] = pd.to_datetime(data['date'], errors='coerce')
 data['date'] = data['date'].dt.strftime('%Y-%m')
+
+# Grouping
 grouped_data_booze = data.groupby(['company', 'date']).agg(
     sum_sale_dollars = ('sale_dollars', 'sum'),
     avg_sale_dollars = ('sale_dollars', 'mean'),
@@ -43,8 +54,7 @@ grouped_data_booze = data.groupby(['company', 'date']).agg(
     num_transactions = ('name', 'count'),
     num_stores = ('store', 'nunique')
 )
-print(grouped_data_booze)
-
+# Write to final csv
 grouped_data_booze.to_csv("../data/grouped_data_booze.csv", index=True)
 ```
 

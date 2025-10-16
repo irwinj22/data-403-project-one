@@ -12,13 +12,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read in Data
-
 grouped_data_booze = pd.read_csv("../data/grouped_data_booze.csv")
 
 # Graphs for Booze Presentation
 
 # Plot Number of Stores vs Total Sales
-
 slope, intercept = np.polyfit(grouped_data_booze['num_stores'], grouped_data_booze['sum_sale_dollars'], 1)
 line_of_best_fit = slope * grouped_data_booze['num_stores'] + intercept
 
@@ -30,7 +28,6 @@ plt.title("Number of Stores Compared to Total Sales")
 plt.show()
 
 # Plot Company Average Monthly Sales vs Number of Stores
-
 gdb = grouped_data_booze.copy() 
 gdb['date'] = pd.to_datetime(gdb['date'], errors='coerce')
 gdb['month'] = gdb['date'].dt.to_period('M').astype(str) 
@@ -51,22 +48,30 @@ plt.legend()
 plt.show()
 
 # Plot total sale dollars over time
-
 grouped_data_graphing = grouped_data_booze.reset_index() 
 plot_data = grouped_data_graphing.groupby('date')['sum_sale_dollars'].sum().reset_index() 
-plt.bar(plot_data['date'], plot_data['sum_sale_dollars']) 
+plt.plot(plot_data['date'], plot_data['sum_sale_dollars']) 
 plt.ylabel("Total Sale Dollars (1 Million $ Scale)") 
 plt.xlabel("Date (Month)") 
 plt.title("Customer Spending Trend Over Time") 
-plt.xticks(rotation=45) 
+plt.xticks(rotation=90, fontsize = 7) 
 plt.show()
 
-# Plot total sale dollars over time
-
-plot_data['date'] = pd.to_datetime(plot_data['date'], errors='coerce') 
-plot_data['year'] = plot_data['date'].dt.year 
-plot_data['month_num'] = plot_data['date'].dt.month 
+# Plot total sale dollars over time (Seperate Years) 
+plot_data['date'] = pd.to_datetime(plot_data['date'], errors='coerce')
+plot_data['year'] = plot_data['date'].dt.year
 plot_data['month'] = plot_data['date'].dt.strftime('%b')
+for yr in sorted(plot_data['year'].unique()):
+    yearly_data = plot_data[plot_data['year'] == yr]
+    plt.plot(yearly_data['month'], yearly_data['sum_sale_dollars'])
+    plt.ylabel("Total Sale Dollars (1 Million $ Scale)")
+    plt.xlabel("Month")
+    plt.title(f"Customer Spending Trend in {yr}")
+    plt.xticks(rotation=45)
+    plt.show()
+
+# Plot total sale dollars over time (Combined Years in one Graph)
+plot_data['month_num'] = plot_data['date'].dt.month 
 
 # Aggregate and pivot
 monthly = (plot_data.groupby(['year', 'month_num', 'month'])['sum_sale_dollars'].sum().reset_index())
