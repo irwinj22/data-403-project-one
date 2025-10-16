@@ -1,0 +1,28 @@
+---
+title: "ReportB"
+subtitle: "Client: Drinking Excess Alcohol is Dangerous (DEAD)"
+author: "Hailey Ernest, James Irwin, Elliot Kunz, Kaatje Matthews-vanKoetsveld"
+date: today
+format: pdf
+jupyter: python3
+echo: false
+---
+
+
+# Introduction
+
+
+
+# Data Preparation
+
+
+
+# Model Selection
+
+
+
+# Final Model
+
+
+
+# Conclusions
