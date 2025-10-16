@@ -1,0 +1,87 @@
+---
+title: "Data Cleaning DEAD"
+format: html
+editor: visual
+jupyter: python3
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+client_a <- read.csv(here::here("data/booze_r_us.csv"))
+```
+
+```{r}
+client_a2  <- client_a |>
+  mutate(
+    company = sub(" [0-9]+",
+                  "",
+                  sub("#.*",
+                      "" ,
+                      sub("/.*", "",name))),
+    company = trimws(company, which="right")
+  )
+write.csv(client_a2, here::here("data/booze_r_us_transformed.csv"))
+```
+
+```{python}
+# imports
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Group and aggregate columns for Booze R Us
+data = pd.read_csv("data/Sbooze_r_us_transformed.csv")
+data['date'] = pd.to_datetime(data['date'], errors='coerce')
+data['date'] = data['date'].dt.strftime('%Y-%m')
+grouped_data_booze = data.groupby(['company', 'date']).agg(
+    sum_sale_dollars = ('sale_dollars', 'sum'),
+    avg_sale_dollars = ('sale_dollars', 'mean'),
+    bottles_sold = ('sale_bottles', 'sum'),
+    num_transactions = ('name', 'count'),
+    num_stores = ('store', 'nunique')
+)
+print(grouped_data_booze)
+
+grouped_data_booze.to_csv("data/grouped_data_booze.csv", index=True)
+```
+
+```{python}
+# Plot Number of Stores vs Total Sales
+slope, intercept = np.polyfit(grouped_data_booze['num_stores'], grouped_data_booze['sum_sale_dollars'], 1)
+line_of_best_fit = slope * grouped_data_booze['num_stores'] + intercept
+
+plt.scatter(grouped_data_booze['num_stores'], grouped_data_booze['sum_sale_dollars'])
+plt.plot(grouped_data_booze['num_stores'], line_of_best_fit, color='red', label='Line of Best Fit')
+plt.ylabel("Total Sale Dollars (100,000 $ Scale)")
+plt.xlabel("Number of Stores")
+plt.title("Number of Stores Compared to Total Sales")
+plt.show()
+
+
+# Plot total sale dollars over time
+grouped_data_graphing = grouped_data_booze.reset_index()
+plot_data = grouped_data_graphing.groupby('date')['sum_sale_dollars'].sum().reset_index()
+plt.bar(plot_data['date'], plot_data['sum_sale_dollars'])
+plt.ylabel("Total Sale Dollars (1 Million $ Scale)")
+plt.xlabel("Date (Month)")
+plt.title("Customer Spending Trend Over Time")
+plt.xticks(rotation=45)
+plt.show()
+
+
+# Plot total sale dollars over time (Seperate Years) 
+plot_data['date'] = pd.to_datetime(plot_data['date'], errors='coerce')
+plot_data['year'] = plot_data['date'].dt.year
+plot_data['month'] = plot_data['date'].dt.strftime('%b')
+for yr in sorted(plot_data['year'].unique()):
+    yearly_data = plot_data[plot_data['year'] == yr]
+    plt.bar(yearly_data['month'], yearly_data['sum_sale_dollars'])
+    plt.ylabel("Total Sale Dollars (1 Million $ Scale)")
+    plt.xlabel("Month")
+    plt.title(f"Customer Spending Trend in {yr}")
+    plt.xticks(rotation=45)
+    plt.show()
+```

@@ -6,8 +6,8 @@ format: html
 #Set up
 ```{r}
 library(tidyverse)
-booze <- read.csv(here::here("grouped_data_booze.csv"))
-DEAD <- read.csv(here::here("grouped_data_dead.csv"))
+booze <- read.csv(here::here("data/grouped_data_booze.csv"))
+DEAD <- read.csv(here::here("data/grouped_data_dead.csv"))
 ```
 
 ```{r}
