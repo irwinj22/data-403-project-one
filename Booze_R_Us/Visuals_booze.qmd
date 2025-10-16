@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 # Read in Data
 
-grouped_data_booze = pd.read_csv("data/grouped_data_booze.csv")
+grouped_data_booze = pd.read_csv("../data/grouped_data_booze.csv")
 
 # Graphs for Booze Presentation
 

@@ -34,7 +34,7 @@ write.csv(population2, here::here("data/Population_in_Iowa_Transformed.csv"))
 # Feature Engeenering for Client B
 
 ```{r}
-client_b <- read.csv(here::here("data/dead.csv"))
+client_b <- read.csv(here::here("../data/dead.csv"))
 ```
 
 ```{r}
@@ -55,7 +55,7 @@ client_b2 <- client_b |>
     )
   )
 
-write.csv(client_b2, here::here("data/dead_transformed.csv"))
+write.csv(client_b2, here::here("../data/dead_transformed.csv"))
 
 ```
 
@@ -66,8 +66,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Group and aggregate columns for DEAD
-data = pd.read_csv("data/dead_transformed.csv")
-pop_data = pd.read_csv('data/Population_in_Iowa_Transformed.csv')
+data = pd.read_csv("../data/dead_transformed.csv")
+pop_data = pd.read_csv('../data/Population_in_Iowa_Transformed.csv')
 
 data['county'] = data['county'].astype(str).str.strip().str.lower()
 pop_data['County'] = pop_data['County'].astype(str).str.strip().str.lower()
@@ -89,7 +89,7 @@ grouped_data_dead = combined_data.groupby(['county', 'date','alcohol_type']).agg
 )
 print(grouped_data_dead)
 
-grouped_data_dead.to_csv("data/grouped_data_dead.csv", index=True)
+grouped_data_dead.to_csv("../data/grouped_data_dead.csv", index=True)
 ```
 
 ```{python}

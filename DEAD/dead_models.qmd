@@ -6,9 +6,10 @@ jupyter: python3
 ---
 
 # Set Up
+
 ```{r}
 library(tidyverse)
-DEAD <- read.csv(here::here("data/grouped_data_dead.csv"))
+DEAD <- read.csv(here::here("../data/grouped_data_dead.csv"))
 ```
 
 ```{r}
@@ -27,8 +28,8 @@ alcohol_dummies <- alcohol_dummies[, -1]
 DEAD <- cbind(DEAD, county_dummies, alcohol_dummies)
 ```
 
-
 # Custom Functions:
+
 ```{r}
 cross_validation_split <- function(dataset, k) {
   set.seed(40313)
@@ -93,6 +94,7 @@ calculate_r2 <- function(y_true, y_pred) {
 ```
 
 # DEAD Models
+
 ```{r}
 predictor_cols <- c("population", "year")
 response <- "sum_sale_dollars"
@@ -107,7 +109,6 @@ results <- fit_cv(DEAD, predictor_cols, response, k = 10)
 print(paste("CV R^2:", round(results, 4)))
 ```
 
-
 ```{r}
 predictor_cols <- c("population", "year", "alcohol_typeCOCKTAILS", "alcohol_typeGIN", "alcohol_typeLIQUEUR", "alcohol_typeRUM", "alcohol_typeSCHNAPPS", "alcohol_typeSCOTCH","alcohol_typeTEQUILA", "alcohol_typeVODKA", "alcohol_typeWHISKEY")
 response <- "sum_sale_dollars"
@@ -115,8 +116,8 @@ results <- fit_cv(DEAD, predictor_cols, response, k = 10)
 print(paste("CV R^2:", round(results, 4)))
 ```
 
-
 Final model:
+
 ```{r}
 predictor_cols <- c("population", "alcohol_typeCOCKTAILS", "alcohol_typeGIN", "alcohol_typeLIQUEUR", "alcohol_typeRUM", "alcohol_typeSCHNAPPS", "alcohol_typeSCOTCH","alcohol_typeTEQUILA", "alcohol_typeVODKA", "alcohol_typeWHISKEY")
 X <- as.matrix(DEAD[, predictor_cols])
@@ -127,12 +128,8 @@ model <- fit_linear_model(X, y)
 print(model)
 ```
 
-
-
-
-
-
 # Using Built in Functions
+
 ```{r}
 library(tidymodels)
 
@@ -142,7 +139,6 @@ DEAD <- DEAD |>
     alcohol_type = as.factor(alcohol_type)
   )
 ```
-
 
 ```{r}
 lin_reg <- linear_reg() |>
@@ -170,7 +166,6 @@ DEAD_cv1 <- lin_reg |>
 DEAD_cv1 |> collect_metrics()
 ```
 
-
 Predict sum Sale Dollars from population and date
 
 ```{r}
@@ -187,8 +182,8 @@ DEAD_cv2 <- lin_reg |>
 DEAD_cv2 |> collect_metrics()
 ```
 
-
 Predict sum Sale Dollars from population and alcohol type
+
 ```{r}
 DEAD_rec3 <- recipe(sum_sale_dollars ~ population + alcohol_type,
                         data=DEAD) |>
@@ -204,6 +199,7 @@ DEAD_cv3 |> collect_metrics()
 ```
 
 Predict sum Sale Dollars from alcohol type
+
 ```{r}
 DEAD_rec4 <- recipe(sum_sale_dollars ~ alcohol_type,
                         data=DEAD) |>
@@ -218,9 +214,8 @@ DEAD_cv4 <- lin_reg |>
 DEAD_cv4 |> collect_metrics()
 ```
 
-
-
 Predict sum Sale Dollars from population,alcohol type, and county
+
 ```{r}
 DEAD_rec5 <- recipe(sum_sale_dollars ~ population + alcohol_type + county,
                         data=DEAD) |>
@@ -235,8 +230,8 @@ DEAD_cv5 <- lin_reg |>
 DEAD_cv5 |> collect_metrics()
 ```
 
-
 Predict sum Sale Dollars from population,alcohol type, and date
+
 ```{r}
 
 DEAD_rec6 <- recipe(sum_sale_dollars ~ population + alcohol_type + date,

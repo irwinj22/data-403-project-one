@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read in Data
-grouped_data_dead = pd.read_csv("data/grouped_data_dead.csv")
+grouped_data_dead = pd.read_csv("../data/grouped_data_dead.csv")
 
 # Graphs for Dead Presentation
 

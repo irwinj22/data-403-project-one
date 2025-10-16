@@ -10,7 +10,7 @@ library(tidyverse)
 ```
 
 ```{r}
-client_a <- read.csv(here::here("data/booze_r_us.csv"))
+client_a <- read.csv(here::here("../data/booze_r_us.csv"))
 ```
 
 ```{r}
@@ -23,7 +23,7 @@ client_a2  <- client_a |>
                       sub("/.*", "",name))),
     company = trimws(company, which="right")
   )
-write.csv(client_a2, here::here("data/booze_r_us_transformed.csv"))
+write.csv(client_a2, here::here("../data/booze_r_us_transformed.csv"))
 ```
 
 ```{python}
@@ -33,7 +33,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Group and aggregate columns for Booze R Us
-data = pd.read_csv("data/Sbooze_r_us_transformed.csv")
+data = pd.read_csv("../data/booze_r_us_transformed.csv")
 data['date'] = pd.to_datetime(data['date'], errors='coerce')
 data['date'] = data['date'].dt.strftime('%Y-%m')
 grouped_data_booze = data.groupby(['company', 'date']).agg(
@@ -45,7 +45,7 @@ grouped_data_booze = data.groupby(['company', 'date']).agg(
 )
 print(grouped_data_booze)
 
-grouped_data_booze.to_csv("data/grouped_data_booze.csv", index=True)
+grouped_data_booze.to_csv("../data/grouped_data_booze.csv", index=True)
 ```
 
 ```{python}

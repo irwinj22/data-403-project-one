@@ -6,9 +6,10 @@ jupyter: python3
 ---
 
 # Set Up
+
 ```{r}
 library(tidyverse)
-booze <- read.csv(here::here("grouped_data_booze.csv"))
+booze <- read.csv(here::here("../data/grouped_data_booze.csv"))
 ```
 
 # Booze Models
@@ -40,8 +41,8 @@ alcohol_dummies <- alcohol_dummies[, -1]
 DEAD <- cbind(DEAD, county_dummies, alcohol_dummies)
 ```
 
-
 # Custom Functions:
+
 ```{r}
 cross_validation_split <- function(dataset, k) {
   set.seed(40313)
@@ -106,18 +107,21 @@ calculate_r2 <- function(y_true, y_pred) {
 ```
 
 # Booze Models
+
 ```{r}
 predictor_cols <- c("num_stores", "year", "month")
 response <- "sum_sale_dollars"
 results <- fit_cv(booze, predictor_cols, response, k = 10)
 print(paste("CV R^2:", round(results, 4)))
 ```
+
 ```{r}
 predictor_cols <- c("num_stores", "year", "month")
 response <- "sum_sale_dollars"
 results <- fit_cv(booze_large_chains, predictor_cols, response, k = 10)
 print(paste("CV R^2:", round(results, 4)))
 ```
+
 ```{r}
 X <- as.matrix(booze[, predictor_cols])
 X <- cbind(intercept = 1, X)
@@ -126,10 +130,6 @@ y <- as.matrix(booze[, response])
 model <- fit_linear_model(X, y)
 print(model)
 ```
-
-
-
-
 
 Using Built in Functions
 
@@ -199,4 +199,3 @@ booze_cv2 <- lin_reg |>
 
 booze_cv2 |> collect_metrics()
 ```
-
