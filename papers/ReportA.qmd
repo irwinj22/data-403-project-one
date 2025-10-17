@@ -45,7 +45,7 @@ The first model we attempted was predicting revenue from the number of stores th
 
 The final model achieved a Mean Squared Error (MSE) of \$45,416,401,989.66 and a Root Mean Squared Error (RMSE) of \$211,503.99, meaning that on average, the model’s predictions are off by about \$211,000. Since the typical values of sales in the dataset per month for store chains range from \$100,000 to \$1.5 million, the model’s predictive correctness varies based on the store chain per month.
 
-Approximately 28.19% of the differences we see in sales can be explained by the factors of Number of Stores, Year, and Month (R-squared). The remaining percentage that isn’t explained using these factors and should be assessed in further analysis includes county characteristics and demographics, competitor chains, and pricing by county. The combination of these findings suggests that it captures patterns and trends for predictive uses, but it tends to make errors in these predictions. How accurately we can predict may be inadequate for expansion predictions, although it does provide an understanding of the influence of store counts and seasonal changes on sales.
+Approximately 28.19% of the differences we see in sales can be explained by the factors of Number of Stores, Year, and Month ($R^2$). The remaining percentage that isn’t explained using these factors and should be assessed in further analysis includes county characteristics and demographics, competitor chains, and pricing by county. The combination of these findings suggests that it captures patterns and trends for predictive uses, but it tends to make errors in these predictions. How accurately we can predict may be inadequate for expansion predictions, although it does provide an understanding of the influence of store counts and seasonal changes on sales.
 
 The coefficients for the final linear regression model are as follows:
 
@@ -63,7 +63,7 @@ coef_data <- data.frame(
   Coefficient = coefficients
 )
 
-coef_data$Coefficient <- comma(round(coef_data$Coefficient, 4))
+coef_data$Coefficient <- comma(round(coef_data$Coefficient, 2), accuracy = 0.01)
 
 coef_data %>%
   kbl(
