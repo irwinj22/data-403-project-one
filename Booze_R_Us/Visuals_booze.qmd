@@ -48,6 +48,7 @@ plt.show()
 # Plot total sale dollars over time
 grouped_data_graphing = grouped_data_booze.reset_index() 
 plot_data = grouped_data_graphing.groupby('date')['sum_sale_dollars'].sum().reset_index() 
+plt.figure(figsize=(10, 6))
 plt.plot(plot_data['date'], plot_data['sum_sale_dollars']) 
 plt.ylabel("Total Sale Dollars (1 Million $ Scale)") 
 plt.xlabel("Date (Month)") 
